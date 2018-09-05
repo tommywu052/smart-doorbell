@@ -19,7 +19,7 @@ exports.Synthesize = function Synthesize(mytts){
     // New unified SpeechService key
     // Free: https://azure.microsoft.com/en-us/try/cognitive-services/?api=speech-services
     // Paid: https://go.microsoft.com/fwlink/?LinkId=872236
-    var apiKey = "333daaab283f4cc6a3a8e4062ce3c1da";
+    var apiKey = "apikey";
     var ssml_doc = xmlbuilder.create('speak')
         .att('version', '1.0')
         .att('xml:lang', 'en-us')
