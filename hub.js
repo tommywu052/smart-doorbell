@@ -26,7 +26,7 @@ micInputStream.pipe(outputFileStream);
 
 
 const FILENAME = "goodbye.wav";
-const BING_SUBSCRIPTION_KEY = "05b038e5cfa04131b448b0f833a91c7e"
+const BING_SUBSCRIPTION_KEY = "key"
 const BING_RECOGNITION_MODE = "interactive";
 const BING_LANGUAGE = "zh-TW";
 const BING_RESULT_FORMAT = "detailed";
@@ -34,8 +34,8 @@ const BING_RESULT_FORMAT = "detailed";
 var tts = require('./TTSService.js');  
 const LUISClient = require("./luis_sdk");
 
-const APPID = "127ada7b-1949-46c7-8ef3-42a27c78f814";
-const APPKEY = "7974af50924c406f872da6c04d0da232";
+const APPID = "appid";
+const APPKEY = "appkey";
 
 var LUISclient = LUISClient({
   appId: APPID,
@@ -56,7 +56,7 @@ async function main() {
     const onError = (err) => {
     console.log("An error occurred on the receiver ", err);
     };
-  const client = await EventHubClient.createFromIotHubConnectionString("HostName=a9iothub.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=ve4B7Bv3B/tPa70fxkpgFC9oXN5AEkTbTDEJiJxDS4A=");
+  const client = await EventHubClient.createFromIotHubConnectionString("HostName=a9iothub.azure-devices.net;key");
   const hubInfo = await client.getHubRuntimeInformation();
   console.log(hubInfo);
   // Create recognizer
