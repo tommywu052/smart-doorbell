@@ -6,20 +6,57 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED *AS IS*, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 **/
+const fs = require('fs');
+const crypto = require('crypto');
+var Sound = require('node-aplay');
 var request = require('request'),
     xmlbuilder = require('xmlbuilder'),
     wav = require('wav'),
     Speaker = require('speaker');
+var mywave;
+    
+const outputFile ="speech.wav";
 
 var exec = require('child_process').exec;
 
-exports.Synthesize = function Synthesize(mytts){
+exports.Synthesize = function Synthesize(mytts,mic,flag){
 
     // Note: new unified SpeechService API key and issue token uri is per region
     // New unified SpeechService key
     // Free: https://azure.microsoft.com/en-us/try/cognitive-services/?api=speech-services
     // Paid: https://go.microsoft.com/fwlink/?LinkId=872236
-    var apiKey = "apikey";
+    
+    var text=mytts.toString();
+	var hash = crypto.createHash('md5').update(text).digest('hex');
+    var wav_file = hash + ".wav";
+    var istalking=false;
+    if(fs.existsSync(wav_file))
+        {
+                console.log('exist wav file.....');
+                mywave = new Sound(wav_file);
+                    mic.pause();
+                    if(!istalking){
+                        mywave.play();
+                        istalking=true;
+                        console.log('is talking.... no Play')
+                    }
+                    
+                    mywave.on('complete',function(){
+                         console.log('close play');
+                         istalking=false;
+                        if(flag)mic.resume();  
+                    });               
+
+        } else  
+        {
+        
+               
+                                
+        
+    
+    
+    
+    var apiKey = "333daaab283f4cc6a3a8e4062ce3c1da";
     var ssml_doc = xmlbuilder.create('speak')
         .att('version', '1.0')
         .att('xml:lang', 'en-us')
@@ -60,24 +97,44 @@ exports.Synthesize = function Synthesize(mytts){
                         console.log(err, resp.body);
                     } else {
                         try {
-                            var reader = new wav.Reader();
+                            //var reader = new wav.Reader();
+                            /*
                             reader.on('format', function (format) {
                                 reader.pipe(new Speaker(format).on('open', function(evt){
                                     // handle playback error
                                     console.log('start play');
-                                    exec('nircmd.exe mutesysvolume 1 microphone');
+                                    mic.pause();
+                                    //exec('nircmd.exe mutesysvolume 1 microphone');
 
                                   }).on('close', function(evt){
                                     // handle playback error
                                     console.log('close play');
-                                    exec('nircmd.exe mutesysvolume 0 microphone');
+                                    if(flag)mic.resume();
+                                   // exec('nircmd.exe mutesysvolume 0 microphone');
                                   }));
                             });
-                            var Readable = require('stream').Readable;
-                            var s = new Readable;
-                            s.push(speak_data);
-                            s.push(null);
-                            s.pipe(reader);
+                            */
+                            //var Readable = require('stream').Readable;
+                            //var s = new Readable;
+                            //s.push(speak_data);
+                            //s.push(null);
+                            //s.pipe(reader);
+
+                            //console.log('Saving output to file: ', outputFile);
+                            console.log('new wave file generation....');
+                            fs.writeFileSync(wav_file, speak_data);
+                            mywave = new Sound(wav_file);
+                            
+                            
+                            
+
+                                mic.pause();
+                                mywave.play();
+                                mywave.on('complete',function(){
+                                    console.log('close play');
+                                    if(flag)mic.resume();  
+                                });
+
                         } catch (e) {
                             console.log(e.message);
                         }
@@ -89,6 +146,6 @@ exports.Synthesize = function Synthesize(mytts){
         }
     });
 
-    
+}// new file
 
 };
