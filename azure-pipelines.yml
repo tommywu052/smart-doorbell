@@ -27,4 +27,3 @@ steps:
     Destination: 'AzureBlob'
     storage: 'a9blob'
     ContainerName: 'firmware'
-    BlobPrefix: 'pipeline'
