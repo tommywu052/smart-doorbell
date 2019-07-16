@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-16.04'
+  vmImage: 'vs2017-win2016'
 strategy:
   matrix:
     Python27:
@@ -22,7 +22,7 @@ strategy:
 steps:
 - task: AzureFileCopy@3
   inputs:
-    SourcePath: 'myblob'
+    SourcePath: '$(Build.Repository.LocalPath)'
     azureSubscription: 'Visual Studio Enterprise(b0e9e86c-0a4e-469d-ab60-8cb199a7db49)'
     Destination: 'AzureBlob'
     storage: 'a9blob'
